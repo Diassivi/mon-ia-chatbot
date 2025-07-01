@@ -1,4 +1,4 @@
-import streamlit as st
+import streamlit as stimport streamlit as st
 
 NOM_IA = "Silvio"
 
@@ -45,3 +45,4 @@ if st.button("Envoyer") and question:
 
 for auteur, texte in st.session_state.historique:
     st.markdown(f"**{auteur}** : {texte}")
+
