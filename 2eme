@@ -1,0 +1,47 @@
+import streamlit as st
+
+NOM_IA = "Silvio"
+
+# Initialise la mémoire du nom de l'utilisateur
+if "nom_utilisateur" not in st.session_state:
+    st.session_state.nom_utilisateur = None
+
+if "historique" not in st.session_state:
+    st.session_state.historique = []
+
+def repondre(question):
+    question_lower = question.lower()
+
+    # Exemple simple pour mémoriser le nom si l'utilisateur le dit
+    if "mon nom est" in question_lower:
+        # Extraire le nom (juste après "mon nom est")
+        nom = question_lower.split("mon nom est")[-1].strip().capitalize()
+        st.session_state.nom_utilisateur = nom
+        return f"Enchanté, {nom} ! Je retiens ton nom désormais."
+
+    # Si la question demande le nom de l'utilisateur
+    if "quel est mon nom" in question_lower or "comment je m'appelle" in question_lower:
+        if st.session_state.nom_utilisateur:
+            return f"Tu m'as dit que ton nom est {st.session_state.nom_utilisateur}."
+        else:
+            return "Je ne connais pas encore ton nom, peux-tu me le dire ?"
+
+    # Réponses standards
+    if "bonjour" in question_lower:
+        return "Bonjour ! Comment puis-je t'aider aujourd'hui ?"
+
+    # Réponse par défaut
+    return f"Je suis encore une version simple, mais je pense que tu veux savoir : {question}"
+
+# Interface Streamlit
+st.title(f"🤖 {NOM_IA}, ton IA personnelle")
+
+question = st.text_input("💬 Pose ta question :")
+
+if st.button("Envoyer") and question:
+    reponse = repondre(question)
+    st.session_state.historique.append(("👤 Toi", question))
+    st.session_state.historique.append((f"🤖 {NOM_IA}", reponse))
+
+for auteur, texte in st.session_state.historique:
+    st.markdown(f"**{auteur}** : {texte}")
